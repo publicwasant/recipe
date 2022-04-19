@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/im_sortByName"
+        android:title="Sort by name"/>
+    <item
+        android:id="@+id/im_sortByCalories"
+        android:title="Sort by calories"/>
+    <item
+        android:id="@+id/im_sortByProteins"
+        android:title="Sort by proteins"/>
+</menu>

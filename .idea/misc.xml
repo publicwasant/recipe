@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/drawable/ic_refresh.xml" value="0.103" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/layout/activity_detail_view.xml" value="0.16802536231884058" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/layout/activity_home_view.xml" value="0.16802536231884058" />
         <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/layout/recycler_item.xml" value="0.1" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/layout/recycler_item.xml" value="0.22" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/menu/menu.xml" value="0.278125" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/menu/sort_item_menu.xml" value="0.278125" />
+        <entry key="..\:/Users/61011/AndroidStudioProjects/RecipeProject/app/src/main/res/menu/sort_list_menu.xml" value="0.278125" />
       </map>
     </option>
   </component>
@@ -17,7 +23,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.2" />
+        <option name="scale" value="0.22" />
       </ProjectState>
     </option>
   </component>

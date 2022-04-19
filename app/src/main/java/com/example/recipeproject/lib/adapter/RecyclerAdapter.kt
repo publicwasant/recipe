@@ -14,14 +14,14 @@ class RecyclerAdapter(
     private val context: Context,
     private val items: ArrayList<RecipeModel>,
 ): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+    private var clickItemTask: ((item: RecipeModel) -> Unit)? = null
+
     class ViewHolder(
         private val v: View,
     ): RecyclerView.ViewHolder(v) {
-        val tvDescription = this.v.tv_description
-        val tvHeadline = this.v.tv_headline
-        val ivImage = this.v.iv_image
-        val tvName = this.v.tv_name
-        val tvTime = this.v.tv_time
+        val cvRecipe = this.v.cv_recipe
+        val ivThumb = this.v.iv_thumb
+        val tvNameAndHeadline = this.v.tv_nameAndHeadline
         val tvValues = this.v.tv_values
     }
 
@@ -34,19 +34,24 @@ class RecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = this.items[position]
 
-        holder.tvDescription.text = "Description: ${item.description}"
-        holder.tvHeadline.text = item.headline
-        holder.tvName.text = item.name
-        holder.tvTime.text = item.time
-        holder.tvValues.text = "Calories: ${item.calories} | Carbos: ${item.carbos} | Fats: ${item.fats} | Proteins: ${item.proteins} | Difficulty: ${item.difficulty.toString()}"
-
         Glide.with(this.context)
-            .load(item.image)
+            .load(item.thumb)
             .centerCrop()
-            .into(holder.ivImage)
+            .into(holder.ivThumb)
+
+        holder.tvNameAndHeadline.text = "${item.name} ${item.headline}"
+        holder.tvValues.text = "Calories: ${item.calories} | Proteins: ${item.proteins}"
+
+        holder.cvRecipe.setOnClickListener {
+            this.clickItemTask!!(item)
+        }
     }
 
     override fun getItemCount(): Int {
         return this.items.size
+    }
+
+    fun setOnItemClick(clickItemTask: (item: RecipeModel) -> Unit) {
+        this.clickItemTask = clickItemTask
     }
 }
