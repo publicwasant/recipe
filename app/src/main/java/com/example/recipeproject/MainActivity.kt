@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
 
-        this.rv_recipes.    layoutManager = LinearLayoutManager(this)
+        this.rv_recipes.layoutManager = LinearLayoutManager(this)
 
         this.actionBar = supportActionBar
         this.actionBar?.title = "All Recipe"
@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         this.sw_recipe.isRefreshing = true
         this.sw_recipe.setOnRefreshListener {
-            this.backup(0)
             this.fetch {
                 this.apply(it)
             }
@@ -154,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetch(next: (PackModel) -> Unit) {
         if (this.pack.recipes.isNotEmpty()) {
-            this.recipeViewModel.getDB().backup(this.pack.recipes)
+            this.recipeViewModel.getDB().backupAndReset(this.pack.recipes)
         }
 
         this.recipeViewModel.getDB().readFavorites { f ->
@@ -177,6 +176,14 @@ class MainActivity : AppCompatActivity() {
                 this.recipeViewModel.getDB().backup(it)
                 this.sw_recipe.isRefreshing = false
             }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (this.pack.recipes.isNotEmpty()) {
+            this.recipeViewModel.getDB().backupAndReset(this.pack.recipes)
         }
     }
 }

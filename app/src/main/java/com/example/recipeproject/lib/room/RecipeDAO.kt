@@ -12,7 +12,7 @@ interface RecipeDAO {
     @Query("SELECT * FROM recipes")
     fun read(): LiveData<List<RecipeTable>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(recipeTable: RecipeTable)
 
     @Update

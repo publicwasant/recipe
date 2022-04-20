@@ -35,8 +35,6 @@ class RecipeUsableRoom(application: Application, private val parentViewModel: An
 
     fun backup(items: ArrayList<RecipeModel>) {
         this.parentViewModel.viewModelScope.launch(Dispatchers.IO) {
-            recipeRepository.deleteAll()
-
             items.forEach {
                 recipeRepository.add(RecipeTable(
                     it.id,
@@ -56,18 +54,25 @@ class RecipeUsableRoom(application: Application, private val parentViewModel: An
         }
     }
 
-    fun swap(start: RecipeModel, end: RecipeModel) {
+    fun backupAndReset(items: ArrayList<RecipeModel>) {
         this.parentViewModel.viewModelScope.launch(Dispatchers.IO) {
-            Thread.sleep(1000)
-            val temp: RecipeTable = toRecipeTable(start)
-            val s: RecipeTable = toRecipeTable(start)
-            val e: RecipeTable = toRecipeTable(end)
-
-            s.id = e.id
-            e.id = temp.id
-
-            recipeRepository.edit(s)
-            recipeRepository.edit(e)
+            recipeRepository.deleteAll()
+            items.forEach {
+                recipeRepository.add(RecipeTable(
+                    it.id,
+                    it.calories,
+                    it.carbos,
+                    it.description,
+                    it.difficulty,
+                    it.fats,
+                    it.headline,
+                    it.image,
+                    it.name,
+                    it.proteins,
+                    it.thumb,
+                    it.time,
+                ))
+            }
         }
     }
 
@@ -102,22 +107,5 @@ class RecipeUsableRoom(application: Application, private val parentViewModel: An
         }
 
         return result
-    }
-
-    fun toRecipeTable(item: RecipeModel): RecipeTable {
-        return RecipeTable(
-            item.id,
-            item.calories,
-            item.carbos,
-            item.description,
-            item.difficulty,
-            item.fats,
-            item.headline,
-            item.image,
-            item.name,
-            item.proteins,
-            item.thumb,
-            item.time,
-        )
     }
 }
