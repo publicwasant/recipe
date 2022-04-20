@@ -28,14 +28,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerAdapter: RecyclerAdapter
     private lateinit var recyclerItemTouchHelper: RecyclerItemTouchHelper
 
-    lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var recipeViewModel: RecipeViewModel
     private var pack: PackModel = PackModel(arrayListOf(), arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
 
-        this.rv_recipes.layoutManager = LinearLayoutManager(this)
+        this.rv_recipes.    layoutManager = LinearLayoutManager(this)
 
         this.actionBar = supportActionBar
         this.actionBar?.title = "All Recipe"
