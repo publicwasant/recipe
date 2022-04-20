@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
         this.sw_recipe.isRefreshing = true
         this.sw_recipe.setOnRefreshListener {
+            this.backup(0)
             this.fetch {
                 this.apply(it)
             }
