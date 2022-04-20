@@ -1,34 +1,35 @@
 
 1. Overview
-   video-demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
-
-USER         APPLICATION      LOCAL_DB       RECIPE_API
- |                |              |               |
- |   Launches()   |              |               |
- |--------------->| BackgroundWorker()           |
- |                |              |               |
- |       alt      |              |               |
- |       +--------|--------------|---------------|--------+
- |       | [If 5 min left]       |               |        |
- |       |        |            Read()            |        |
- |       |        |----------------------------->|        |
- |       |        |              |     list      |        |
- |       |        | BackUp(list) |<--------------|        |
- |       |        |              |               |        |
- |       |        |    Read()    |               |        |
- |       |        |------------->|               |        |
- |       |        |     list     |               |        |
- |  Display(list) |<-------------|               |        |
- |       |        |              |               |        |
- |       |--------|--------------|---------------|--------|
- |       | [Else] |              |               |        |
- |       |        |    Read()    |               |        |
- |       |        |------------->|               |        |
- |       |        |     list     |               |        |
- |  Display(list) |<-------------|               |        |
- |       |        |              |               |        |
- |       |        |              |               |        |
- |       +--------|--------------|---------------|--------+
+   * Video Demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
+   * Sequence Diagram:
+   
+   USER         APPLICATION      LOCAL_DB       RECIPE_API
+    |                |              |               |
+    |   Launches()   |              |               |
+    |--------------->| BackgroundWorker()           |
+    |                |              |               |
+    |       alt      |              |               |
+    |       +--------|--------------|---------------|--------+
+    |       | [If 5 min left]       |               |        |
+    |       |        |            Read()            |        |
+    |       |        |----------------------------->|        |
+    |       |        |              |     list      |        |
+    |       |        | BackUp(list) |<--------------|        |
+    |       |        |              |               |        |
+    |       |        |    Read()    |               |        |
+    |       |        |------------->|               |        |
+    |       |        |     list     |               |        |
+    |  Display(list) |<-------------|               |        |
+    |       |        |              |               |        |
+    |       |--------|--------------|---------------|--------|
+    |       | [Else] |              |               |        |
+    |       |        |    Read()    |               |        |
+    |       |        |------------->|               |        |
+    |       |        |     list     |               |        |
+    |  Display(list) |<-------------|               |        |
+    |       |        |              |               |        |
+    |       |        |              |               |        |
+    |       +--------|--------------|---------------|--------+
 
 2. Requirements. 
    * Baseline Requirements:
