@@ -1,7 +1,7 @@
 
 1. Overview
-   * Video Demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
-   * Sequence Diagram:
+   ◦ Video Demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
+   ◦ Sequence Diagram:
    
    USER         APPLICATION      LOCAL_DB       RECIPE_API
     |                |              |               |
@@ -9,7 +9,7 @@
     |--------------->| BackgroundWorker()           |
     |                |              |               |
     |       alt      |              |               |
-    |       +--------|--------------|---------------|--------+
+    |       ◦--------|--------------|---------------|--------◦
     |       | [If 5 min left]       |               |        |
     |       |        |            Read()            |        |
     |       |        |----------------------------->|        |
@@ -29,26 +29,26 @@
     |  Display(list) |<-------------|               |        |
     |       |        |              |               |        |
     |       |        |              |               |        |
-    |       +--------|--------------|---------------|--------+
+    |       ◦--------|--------------|---------------|--------◦
 
 2. Requirements. 
-   * Baseline Requirements:
+   ◦ Baseline Requirements:
    2.1 Use recipes.json to build an application that shows a list of recipes via HTTP request.
-       ◦ When the app is first launched, fetch the recipes JSON from the API and store it in theapp DB.             YES
-       ◦ On subsequent launches, use the data from the local DB.                                                    YES
-       ◦ Have a 5-minute recurring background job to sync the local DB with the API                                 YES
+       - When the app is first launched, fetch the recipes JSON from the API and store it in theapp DB.             YES
+       - On subsequent launches, use the data from the local DB.                                                    YES
+       - Have a 5-minute recurring background job to sync the local DB with the API                                 YES
    2.2 The list should be displayed in the intuitive design.                                                        YES
    2.3 Be able to mark a recipe(s) as favorite.                                                                     YES
    2.4 Be able to sort and re-arrange the list then the change will be saved to the local DB.                       YES
    2.5 Upload the project into any public Git hosting services and ensure that your project is buildable.           YES
    2.6 Provide README with justifications and testing strategies.                                                   YES
    
-   * Your Application should:
+   ◦ Your Application should:
    2.7 Adhere to Java/Kotlin programming best practices.                                                            YES
    2.8 Backward compatible with Android 5.0 to the latest version.                                                  YES
    2.9 Able to perform normally without any exception.                                                              YES
    
-   * Additional Requirements
+   ◦ Additional Requirements
      Bonus points if you can demonstrate understanding in the Recipe Application any of the below:
    2.10 App Architecture. Develop the application using Architecture Component and align with                       YES
         Google recommended guide to App Architecture. Take a look at App architecture | Android
