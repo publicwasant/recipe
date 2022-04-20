@@ -122,3 +122,74 @@ USER             APP             DB             API
           }
       }
       ```
+      
+   3.3 Be able to mark a recipe(s) as favorite.
+   
+      ```kotlin
+      // Setup click event.
+      // File: com.example.recipeproject.view.DetailView.k
+      this.bt_favorite.setOnClickListener {
+          if (this.favorite!!) {
+              this.recipeViewModel.getDB().deleteFavorite(this.id!!)
+              this.favorite = !this.favorite!!
+              Toast.makeText(this, "Remove Favorite", Toast.LENGTH_SHORT).show()
+          } else {
+              this.recipeViewModel.getDB().addFavorite(this.id!!)
+              this.favorite = !this.favorite!!
+              Toast.makeText(this, "Add Favorite", Toast.LENGTH_SHORT).show()
+          }
+
+          this.setFavorite()
+      }
+      
+      // Function to display text in button.
+      // File: com.example.recipeproject.view.DetailView.k
+      private fun setFavorite() {
+          if (this.favorite!!) {
+              this.bt_favorite.text = "❤ Favorite"
+          } else {
+              this.bt_favorite.text = "Add Favorite"
+          }
+      }
+      ```
+      
+   3.4 Be able to sort and re-arrange the list then the change will be saved to the local DB.
+      
+      ```kotlin
+      // Class touch item helper.
+      // File: com.example.recipeproject.lib.helper.RecyclerItemTouchHelper.kt
+      class RecyclerItemTouchHelper: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN), 0) {
+          private lateinit var items: ArrayList<RecipeModel>
+
+          override fun onMove(
+              recyclerView: RecyclerView,
+              viewHolder: RecyclerView.ViewHolder,
+              target: RecyclerView.ViewHolder,
+          ): Boolean {
+              val start = viewHolder.adapterPosition
+              val end = target.adapterPosition
+
+              Collections.swap(items, start, end)
+              recyclerView.adapter?.notifyItemMoved(start, end)
+
+              return true
+          }
+
+          override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+          fun getItems(): ArrayList<RecipeModel> {
+              return this.items
+          }
+
+          fun setItems(items: ArrayList<RecipeModel>) {
+              this.items = items
+          }
+      }
+      
+      // Setup touch item helper to recycler view.
+      // File: com.example.recipeproject.MainActicity.kt
+      this.recyclerItemTouchHelper = RecyclerItemTouchHelper()
+      this.recyclerItemTouchHelper.let {
+          ItemTouchHelper(it).attachToRecyclerView(this.rv_recipes)
+      }
+      ```
