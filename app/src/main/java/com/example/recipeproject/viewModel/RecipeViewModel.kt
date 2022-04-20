@@ -1,48 +1,29 @@
 package com.example.recipeproject.viewModel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.example.recipeproject.lib.network.RetroInstanceNetwork
-import com.example.recipeproject.lib.network.RetroServiceNetwork
-import com.example.recipeproject.model.RecipeModel
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import android.app.Application
+import androidx.lifecycle.*
+import com.example.recipeproject.lib.thread.BackgroundFetchThread
+import com.example.recipeproject.lib.network.RetroUsableNetwork
+import com.example.recipeproject.lib.room.*
 
-class RecipeViewModel: ViewModel() {
-    private var recipes: MutableLiveData<ArrayList<RecipeModel>>? = null
+class RecipeViewModel(application: Application): AndroidViewModel(application) {
+    private var backgroundFetchThread: BackgroundFetchThread = BackgroundFetchThread()
+    private var db: RecipeUsableRoom = RecipeUsableRoom(application, this)
+    private var api: RetroUsableNetwork = RetroUsableNetwork()
 
-    init {
-        this.recipes = MutableLiveData()
+    fun getDB(): RecipeUsableRoom {
+        return this.db
     }
 
-    fun getObserver(): MutableLiveData<ArrayList<RecipeModel>> {
-        return this.recipes!!
+    fun getAPI(): RetroUsableNetwork {
+        return this.api
     }
 
-    fun call() {
-        val retroInstance = RetroInstanceNetwork.getRetroInstance().create(RetroServiceNetwork::class.java)
-
-        retroInstance.getRecipes()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this.getRecipeObserverRx())
+    fun setBackgroundTask(t: (Int) -> Unit) {
+        this.backgroundFetchThread.setTask(t)
     }
 
-    private fun getRecipeObserverRx(): Observer<ArrayList<RecipeModel>> {
-        return object : Observer<ArrayList<RecipeModel>> {
-            override fun onComplete() {}
-
-            override fun onError(e: Throwable) {
-                recipes?.postValue(null)
-            }
-
-            override fun onNext(t: ArrayList<RecipeModel>) {
-                recipes?.postValue(t)
-            }
-
-            override fun onSubscribe(d: Disposable) {}
-        }
+    fun startBackgroundTask() {
+        this.backgroundFetchThread.start()
     }
 }

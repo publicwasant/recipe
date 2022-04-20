@@ -12,30 +12,82 @@ import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeproject.lib.adapter.RecyclerAdapter
+import com.example.recipeproject.lib.helper.RecyclerItemTouchHelper
+import com.example.recipeproject.model.FavoriteModel
+import com.example.recipeproject.model.PackModel
 import com.example.recipeproject.model.RecipeModel
 import com.example.recipeproject.view.DetailView
 import com.example.recipeproject.viewModel.RecipeViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private var actionBar: ActionBar? = null
-    private var detailViewIntent: Intent? = null
+    private lateinit var detailViewIntent: Intent
+
+    private lateinit var recyclerAdapter: RecyclerAdapter
+    private lateinit var recyclerItemTouchHelper: RecyclerItemTouchHelper
+
+    lateinit var recipeViewModel: RecipeViewModel
+    private var pack: PackModel = PackModel(arrayListOf(), arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.setContentView(R.layout.activity_main)
 
+        this.rv_recipes.layoutManager = LinearLayoutManager(this)
+
         this.actionBar = supportActionBar
-        this.actionBar!!.title = "Recipe Application"
+        this.actionBar?.title = "All Recipe"
         this.detailViewIntent = Intent(this, DetailView::class.java)
 
-        this.fetch {
-            this.setContextViews(it)
+        this.recyclerAdapter = RecyclerAdapter(this)
+        this.recyclerAdapter.setOnItemClick {
+            this.setOnClickRecyclerItem(it)
         }
+
+        this.recyclerItemTouchHelper = RecyclerItemTouchHelper()
+        this.recyclerItemTouchHelper.let {
+            ItemTouchHelper(it).attachToRecyclerView(this.rv_recipes)
+        }
+
+        this.recipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
+        this.recipeViewModel.setBackgroundTask {
+            this.backup(it)
+        }
+        this.recipeViewModel.startBackgroundTask()
+
+        this.sw_recipe.isRefreshing = true
+        this.sw_recipe.setOnRefreshListener {
+            this.fetch {
+                this.apply(it)
+            }
+        }
+
+        this.fetch {
+            if (it.recipes.isEmpty()) {
+                this.backup(0)
+            }
+
+            this.apply(it)
+        }
+    }
+
+    private fun setOnClickRecyclerItem(item: RecipeModel) {
+        this.detailViewIntent.putExtra("calories", item.calories)
+        this.detailViewIntent.putExtra("carbos", item.carbos)
+        this.detailViewIntent.putExtra("description", item.description)
+        this.detailViewIntent.putExtra("difficulty", item.difficulty)
+        this.detailViewIntent.putExtra("fats", item.fats)
+        this.detailViewIntent.putExtra("headline", item.headline)
+        this.detailViewIntent.putExtra("id", item.id)
+        this.detailViewIntent.putExtra("name", item.name)
+        this.detailViewIntent.putExtra("proteins", item.proteins)
+        this.detailViewIntent.putExtra("thumb", item.thumb)
+        this.detailViewIntent.putExtra("time", item.time)
+        this.detailViewIntent.putExtra("image", item.image)
+        this.detailViewIntent.putExtra("favorite", FavoriteModel(item.id) in this.pack.favorites)
+        this.startActivity(detailViewIntent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,45 +97,34 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.im_refresh -> {
-                this.fetch {
-                    this.setContextViews(it)
-                }
-            }
             R.id.im_sort -> {
-                val v = findViewById<View>(R.id.im_sort)
-                val popup: PopupMenu = PopupMenu(this, v)
-                
+                val imSort = findViewById<View>(R.id.im_sort)
+                val popup: PopupMenu = PopupMenu(this, imSort)
+
                 popup.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.im_sortByName -> {
-                            this.fetch {
-                                it.sortBy {
-                                    it.name
-                                }
-
-                                this.setContextViews(it)
+                            this.pack.recipes.sortBy { it.name }
+                            this.pack.let {
+                                this.apply(it)
                             }
+                            Toast.makeText(this, "Sort by name", Toast.LENGTH_SHORT).show()
                             true
                         }
                         R.id.im_sortByCalories -> {
-                            this.fetch {
-                                it.sortBy {
-                                    it.calories
-                                }
-
-                                this.setContextViews(it)
+                            this.pack.recipes.sortBy { it.calories }
+                            this.pack.let {
+                                this.apply(it)
                             }
+                            Toast.makeText(this, "Sort by calories", Toast.LENGTH_SHORT).show()
                             true
                         }
                         R.id.im_sortByProteins -> {
-                            this.fetch {
-                                it.sortBy {
-                                    it.proteins
-                                }
-
-                                this.setContextViews(it)
+                            this.pack.recipes.sortBy { it.proteins }
+                            this.pack.let {
+                                this.apply(it)
                             }
+                            Toast.makeText(this, "Sort by proteins", Toast.LENGTH_SHORT).show()
                             true
                         }
                         else -> false
@@ -97,77 +138,44 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setRecyclerView(recipes: ArrayList<RecipeModel>) {
-        val recyclerAdapter = RecyclerAdapter(this, recipes)
-
-        rv_recipes.layoutManager = LinearLayoutManager(this)
-        rv_recipes.adapter = recyclerAdapter
-
-        recyclerAdapter.notifyDataSetChanged()
-        recyclerAdapter.setOnItemClick {
-            this.detailViewIntent?.putExtra("calories", it.calories)
-            this.detailViewIntent?.putExtra("carbos", it.carbos)
-            this.detailViewIntent?.putExtra("description", it.description)
-            this.detailViewIntent?.putExtra("difficulty", it.difficulty)
-            this.detailViewIntent?.putExtra("fats", it.fats)
-            this.detailViewIntent?.putExtra("headline", it.headline)
-            this.detailViewIntent?.putExtra("id", it.id)
-            this.detailViewIntent?.putExtra("name", it.name)
-            this.detailViewIntent?.putExtra("proteins", it.proteins)
-            this.detailViewIntent?.putExtra("thumb", it.thumb)
-            this.detailViewIntent?.putExtra("time", it.time)
-            this.detailViewIntent?.putExtra("image", it.image)
-            this.startActivity(detailViewIntent)
-        }
-    }
-
-    private fun setItemTouchHelper(recipes: ArrayList<RecipeModel>) {
-        val simpleCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP.or(ItemTouchHelper.DOWN), 0) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder,
-            ): Boolean {
-                val start = viewHolder.adapterPosition
-                val end = target.adapterPosition
-
-                Collections.swap(recipes, start, end)
-                recyclerView.adapter?.notifyItemMoved(start, end)
-
-                return true
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+    private fun apply(p: PackModel) {
+        this.pack = p
+        this.recyclerItemTouchHelper.setItems(p.recipes)
+        this.recyclerAdapter.setItems(p.recipes)
+        this.recyclerAdapter.setFavorites(p.favorites)
+        this.recyclerAdapter.let {
+            this.rv_recipes.adapter = it
         }
 
-        val itemTouchHelper = ItemTouchHelper(simpleCallback)
-        itemTouchHelper.attachToRecyclerView(rv_recipes)
+        this.actionBar?.title = "All Recipe (${p.recipes.size})"
+        this.sw_recipe.isRefreshing = false
     }
 
-    private fun setContextViews(recipes: ArrayList<RecipeModel>) {
-        this.actionBar!!.title = "Recipe Application (${recipes.size})"
-        this.setRecyclerView(recipes)
-        this.setItemTouchHelper(recipes)
-    }
-
-    private fun fetch(f: (ArrayList<RecipeModel>) -> Unit) {
-        this.fetchFromAPI {
-            f(it)
+    private fun fetch(next: (PackModel) -> Unit) {
+        if (this.pack.recipes.isNotEmpty()) {
+            this.recipeViewModel.getDB().backup(this.pack.recipes)
         }
-    }
 
-    private fun fetchFromDB(f: (ArrayList<RecipeModel>) -> Unit) {
-    }
-
-    private fun fetchFromAPI(f: (ArrayList<RecipeModel>) -> Unit) {
-        val recipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
-
-        recipeViewModel.getObserver().observe(this) {
-            it?.let {
-                f(it)
+        this.recipeViewModel.getDB().readFavorites { f ->
+            f.observe(this) { fitems ->
+            this.recipeViewModel.getDB().read { r ->
+                r.observe(this) { ritems ->
+                    next(PackModel(
+                        this.recipeViewModel.getDB().toFavoriteModel(fitems),
+                        this.recipeViewModel.getDB().toRecipeModel(ritems)))
+                    }
+                }
             }
         }
+    }
 
-        recipeViewModel.call()
+    private fun backup(count: Int) {
+        this.sw_recipe.isRefreshing = true
+        this.recipeViewModel.getAPI().readAll { live ->
+            live.observe(this) {
+                this.recipeViewModel.getDB().backup(it)
+                this.sw_recipe.isRefreshing = false
+            }
+        }
     }
 }

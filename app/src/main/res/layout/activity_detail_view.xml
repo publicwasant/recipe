@@ -57,8 +57,9 @@
         android:textStyle="bold"
         tools:text="◦ Fats: 8 g | Proteins: 43 g"/>
     <Button
+        android:id="@+id/bt_favorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="🖤❤ Favorite"/>
+        android:text="Add Favorite"/>
 </LinearLayout>

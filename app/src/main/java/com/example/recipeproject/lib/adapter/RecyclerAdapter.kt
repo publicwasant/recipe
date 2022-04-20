@@ -4,25 +4,28 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeproject.R
+import com.example.recipeproject.model.FavoriteModel
 import com.example.recipeproject.model.RecipeModel
 import kotlinx.android.synthetic.main.recycler_item.view.*
 
-class RecyclerAdapter(
-    private val context: Context,
-    private val items: ArrayList<RecipeModel>,
-): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-    private var clickItemTask: ((item: RecipeModel) -> Unit)? = null
+class RecyclerAdapter(private val context: Context): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+    private lateinit var favorites: ArrayList<FavoriteModel>
+    private lateinit var items: ArrayList<RecipeModel>
 
-    class ViewHolder(
-        private val v: View,
-    ): RecyclerView.ViewHolder(v) {
-        val cvRecipe = this.v.cv_recipe
-        val ivThumb = this.v.iv_thumb
-        val tvNameAndHeadline = this.v.tv_nameAndHeadline
-        val tvValues = this.v.tv_values
+    private lateinit var clickItemTask: ((item: RecipeModel) -> Unit)
+
+    class ViewHolder(private val v: View): RecyclerView.ViewHolder(v) {
+        val cvRecipe: CardView = this.v.cv_recipe
+        val ivThumb: ImageView = this.v.iv_thumb
+        val tvNameAndHeadline: TextView = this.v.tv_nameAndHeadline
+        val tvValues: TextView = this.v.tv_values
+        val tvHint: TextView = this.v.tv_hint
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,23 +35,39 @@ class RecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = this.items[position]
+        this.items.let {
+            val recipe = it[position]
 
-        Glide.with(this.context)
-            .load(item.thumb)
-            .centerCrop()
-            .into(holder.ivThumb)
+            Glide.with(this.context)
+                .load(recipe.thumb)
+                .centerCrop()
+                .into(holder.ivThumb)
 
-        holder.tvNameAndHeadline.text = "${item.name} ${item.headline}"
-        holder.tvValues.text = "Calories: ${item.calories} | Proteins: ${item.proteins}"
+            holder.tvNameAndHeadline.text = "${recipe.name} ${recipe.headline}"
+            holder.tvValues.text = "Calories: ${recipe.calories} | Proteins: ${recipe.proteins}"
 
-        holder.cvRecipe.setOnClickListener {
-            this.clickItemTask!!(item)
+            if (FavoriteModel(recipe.id) in this.favorites) {
+                holder.tvHint.text = "❤ Favorite | Click to view detail."
+            }
+
+            holder.cvRecipe.setOnClickListener {
+                this.clickItemTask(recipe)
+            }
         }
     }
 
     override fun getItemCount(): Int {
         return this.items.size
+    }
+
+    fun setFavorites(favorites: ArrayList<FavoriteModel>) {
+        this.favorites = favorites
+        notifyDataSetChanged()
+    }
+
+    fun setItems(items: ArrayList<RecipeModel>) {
+        this.items = items
+        notifyDataSetChanged()
     }
 
     fun setOnItemClick(clickItemTask: (item: RecipeModel) -> Unit) {
