@@ -61,19 +61,9 @@ USER             APP             DB             API
    3.1 First launched, fetch the recipes JSON from the API and store it in theapp DB
        
        ```kotlin
-       // Fetch recipes data from API and backup to DB.
-       private fun backup(count: Int) {
-           this.sw_recipe.isRefreshing = true
-           this.recipeViewModel.getAPI().readAll { live ->
-               live.observe(this) {
-                   this.recipeViewModel.getDB().backup(it)
-                   this.sw_recipe.isRefreshing = false
-               }
-           }
-       }
-       
        // Fetch recipes data from DB and display.
        // Type PackModel is contained a list of favorites, recipes.
+       // File: com.example.recipeproject.MainActicity.kt
        private fun fetch(next: (PackModel) -> Unit) {
            if (this.pack.recipes.isNotEmpty()) {
                this.recipeViewModel.getDB().backupAndReset(this.pack.recipes)
@@ -92,3 +82,43 @@ USER             APP             DB             API
            }
        }
        ```
+       
+   3.2 Have a 5-minute recurring background job to sync the local DB with the API
+   
+       ```kotlin
+       // Class for background worker.
+       // File: com.example.recipeproject.lib.thread.BackgroundFetchThread.kt
+       class BackgroundFetchThread(): Thread() {
+          private lateinit var task: (Int) -> Unit
+
+          override fun run() {
+              super.run()
+
+              var count = 0
+
+              while (true) {
+                  Thread.sleep(1000*60*5)
+                  Handler(Looper.getMainLooper()).post {
+                      this.task(count)
+                      count += 1
+                  }
+              }
+          }
+
+          fun setTask(t: (Int) -> Unit) {
+              this.task = t
+          }
+      }
+       
+      // Fetch recipes data from API and backup to DB.
+      // File: com.example.recipeproject.MainActicity.kt
+      private fun backup(count: Int) {
+          this.sw_recipe.isRefreshing = true
+          this.recipeViewModel.getAPI().readAll { live ->
+              live.observe(this) {
+                  this.recipeViewModel.getDB().backup(it)
+                  this.sw_recipe.isRefreshing = false
+              }
+          }
+      }
+      ```
