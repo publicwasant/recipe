@@ -32,6 +32,19 @@
     |       |        |                |                |        |
     |       ◦--------|----------------|----------------|--------◦
 
+   ◦ Sequence Diagram: Be able to mark a recipe(s) as favorite.
+   
+   USER         APPLICATION        LOCAL_DB
+    |                |                |
+    |AddFavorite(id) |   Insert(id)   |
+    |--------------->|--------------->|
+    |                |                |
+    |BrowsFavorite() |     Read()     |
+    |--------------->|--------------->|
+    |                |      list      |
+    |  Display(list) |<---------------|
+    |                |                |
+    
    ◦ Sequence Diagram: Reorder the list then the change will be saved to the local DB.
    
    USER         APPLICATION        LOCAL_DB
