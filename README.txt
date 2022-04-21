@@ -1,35 +1,56 @@
 
 1. Overview
    ◦ Video Demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
-   ◦ Sequence Diagram:
+   ◦ Sequence Diagram: First launched, fetch the data from the API and backup it in the local DB.
    
-   USER         APPLICATION      LOCAL_DB       RECIPE_API
-    |                |              |               |
-    |   Launches()   |              |               |
-    |--------------->| BackgroundWorker()           |
-    |                |              |               |
-    |       alt      |              |               |
-    |       ◦--------|--------------|---------------|--------◦
-    |       | [If 5 min left]       |               |        |
-    |       |        |            Read()            |        |
-    |       |        |----------------------------->|        |
-    |       |        |              |     list      |        |
-    |       |        | BackUp(list) |<--------------|        |
-    |       |        |              |               |        |
-    |       |        |    Read()    |               |        |
-    |       |        |------------->|               |        |
-    |       |        |     list     |               |        |
-    |  Display(list) |<-------------|               |        |
-    |       |        |              |               |        |
-    |       |--------|--------------|---------------|--------|
-    |       | [Else] |              |               |        |
-    |       |        |    Read()    |               |        |
-    |       |        |------------->|               |        |
-    |       |        |     list     |               |        |
-    |  Display(list) |<-------------|               |        |
-    |       |        |              |               |        |
-    |       |        |              |               |        |
-    |       ◦--------|--------------|---------------|--------◦
+   USER         APPLICATION        LOCAL_DB        RECIPE_API
+    |                |                |--------------->|
+    |   Launches()   |                |                |
+    |--------------->| BackgroundWorker()              |
+    |       alt      |                |                |
+    |       ◦--------|----------------|----------------|--------◦
+    |       | [If 5 min left]         |                |        |
+    |       |        |              Read()             |        |
+    |       |        |-------------------------------->|        |
+    |       |        |               list              |        |
+    |       |        |<--------------------------------|        | 
+    |       |        |                |                |        |
+    |       |        |   Backup(list) |                |        |
+    |       |        |--------------->|                |        |
+    |       |        |      Read()    |                |        |
+    |       |        |--------------->|                |        |
+    |       |        |       list     |                |        |
+    |  Display(list) |<---------------|                |        |
+    |       |        |                |                |        |
+    |       |--------|----------------|----------------|--------|
+    |       | [Else] |                |                |        |
+    |       |        |      Read()    |                |        |
+    |       |        |--------------->|                |        |
+    |       |        |       list     |                |        |
+    |  Display(list) |<---------------|                |        |
+    |       |        |                |                |        |
+    |       ◦--------|----------------|----------------|--------◦
+
+   ◦ Sequence Diagram: Reorder the list then the change will be saved to the local DB.
+   
+   USER         APPLICATION        LOCAL_DB
+    |                |                |
+    |  Reorder(list) |                |
+    |--------------->|  Display(list) |
+    |                |                |
+    |   Refresh()    |                |
+    |--------------->|  DeleteAll()   |
+    |                |--------------->|
+    |                | InsertAll(list)|
+    |                |--------------->|
+    |  Display(list) |<---------------|
+    |                |                |
+    |    OnStop()    |                |
+    |--------------->|  DeleteAll()   |
+    |                |--------------->|
+    |                | InsertAll(list)|
+    |                |--------------->|
+    |                |                |
 
 2. Requirements. 
    ◦ Baseline Requirements:
