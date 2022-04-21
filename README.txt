@@ -4,7 +4,7 @@
    ◦ Sequence Diagram: First launched, fetch the data from the API and backup it in the local DB.
    
    USER         APPLICATION        LOCAL_DB        RECIPE_API
-    |                |                |--------------->|
+    |                |                |                |
     |   Launches()   |                |                |
     |--------------->| RunBackgroundWorker()           |
     |       alt      |                |                |
