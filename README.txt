@@ -74,8 +74,7 @@
    ◦ Additional Requirements
      Bonus points if you can demonstrate understanding in the Recipe Application any of the below:
    2.10 App Architecture. Develop the application using Architecture Component and align with                       YES
-        Google recommended guide to App Architecture. Take a look at App architecture | Android
-        Developers
+        Google recommended guide to App Architecture.
    2.11 Jetpack Compose. Use Jetpack Compose to build UIs                                                           NO
    2.12 Clean Architecture. Use Clean Architecture to design and develop the application                            YES
    2.13 Authentication. Use Firebase Authentication to implement login and logout feature withauthentication,       NO 
