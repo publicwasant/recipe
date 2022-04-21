@@ -2,7 +2,7 @@
 1. Overview
    ◦ Video Demo: https://drive.google.com/file/d/1CByIX_6V_IeINNwGOxN0LHF4yU5TZR-8/view
    ◦ Sequence Diagram: First launched, fetch the data from the API and backup it in the local DB.
-                       Have a 5 minute recurring background job to sync the local DB with the API
+                       Have a 5 minute recurring background job to sync the local DB with the API.
    
    USER         APPLICATION        LOCAL_DB        RECIPE_API
     |                |                |                |
