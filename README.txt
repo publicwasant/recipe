@@ -52,7 +52,7 @@
     |  Reorder(list) |                |
     |--------------->|  Display(list) |
     |                |                |
-    |   Refresh()    |    Delete()    |
+    |   Refresh()    |   DeleteAll()  |
     |--------------->|--------------->|
     |                |  Insert(list)  |
     |                |--------------->|
@@ -61,7 +61,7 @@
     |                |      list      |
     |  Display(list) |<---------------|
     |                |                |
-    |    OnStop()    |    Delete()    |
+    |    OnStop()    |   DeleteAll()  |
     |--------------->|--------------->|
     |                |  Insert(list)  |
     |                |--------------->|
