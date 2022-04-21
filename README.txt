@@ -93,7 +93,40 @@
    2.13 Authentication. Use Firebase Authentication to implement login and logout feature withauthentication,       NO 
         encryption password and session persistency until logout
    2.14 Unit Test. Write UI or/and unit tests                                                                       NO
-   
+  
+3. File Organization 
+   ◦ com.example.recipeproject
+     lib: 
+        adapter: 
+          RecyclerAdapter.kt
+        helper: 
+          RecyclerItemTouchHelper.kt
+        network: 
+          RetroInstanceNetwork.kt
+          RetroServiceNetwork.kt
+          RetroUsableNetwork.kt
+        room:
+          FavoriteDAO.kt
+          FavoriteDatabase.kt
+          FavoriteRepository.kt
+          FavoriteTable.kt
+          RecipeDAO.kt
+          RecipeDatabase.kt
+          RecipeRepository.kt
+          RecipeTable.kt
+          RecipeaUsableRoom.kt
+        thread:
+          BackgroundFetchThread.kt
+     model:
+        FavoriteModel.kt
+        PackModel.kt
+        RecipeModel.kt
+     view:
+        DetailView.kt
+     viewModel:
+        RecipeViewModel.kt
+     MainActivity.kt
+
 3. Code Description
    3.1 First launched, fetch the recipes JSON from the API and store it in theapp DB
        
