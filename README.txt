@@ -127,8 +127,8 @@
         RecipeViewModel.kt
      MainActivity.kt
 
-3. Code Description
-   3.1 First launched, fetch the recipes JSON from the API and store it in theapp DB
+4. Code Description
+   4.1 First launched, fetch the recipes JSON from the API and store it in theapp DB
        
        ```kotlin
        // Fetch recipes data from DB and display.
@@ -153,7 +153,7 @@
        }
        ```
        
-   3.2 Have a 5-minute recurring background job to sync the local DB with the API
+   4.2 Have a 5-minute recurring background job to sync the local DB with the API
    
        ```kotlin
        // Class for background worker.
@@ -193,7 +193,7 @@
       }
       ```
       
-   3.3 Be able to mark a recipe(s) as favorite.
+   4.3 Be able to mark a recipe(s) as favorite.
    
       ```kotlin
       // Setup click event.
@@ -223,7 +223,7 @@
       }
       ```
       
-   3.4 Be able to sort and re-arrange the list then the change will be saved to the local DB.
+   4.4 Be able to sort and re-arrange the list then the change will be saved to the local DB.
       
       ```kotlin
       // Class touch item helper.
